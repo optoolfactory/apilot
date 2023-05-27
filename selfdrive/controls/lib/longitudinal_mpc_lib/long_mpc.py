@@ -817,7 +817,7 @@ class LongitudinalMpc:
       elif (v_ego_kph > 30.0 and (stop_x > 60.0 and abs(y[-1])<2.0)):
         self.xState = XState.e2eCruise
       else:
-        self.trafficState = 0
+        #self.trafficState = 0
         self.trafficError = False
         stop_x = 1000.0
     ## 신호감지주행중
