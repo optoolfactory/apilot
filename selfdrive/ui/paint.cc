@@ -761,7 +761,7 @@ void DrawApilot::drawLeadApilot(const UIState* s) {
         float _path_y = (y1 + y2) / 2.;
         if (_path_y > s->fb_h - 100) _path_y = s->fb_h - 100;
         float _path_width = x2 - x1;
-        float alpha = 0.92;
+        float alpha = 0.85;
         path_fx = path_fx * alpha + _path_x * (1. - alpha);
         path_fy = path_fy * alpha + _path_y * (1. - alpha);
         path_fwidth = path_fwidth * alpha + _path_width * (1. - alpha);
