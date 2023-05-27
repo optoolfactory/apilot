@@ -259,6 +259,7 @@ class LongitudinalMpc:
     self.e2eCruiseCount = 0
     self.mpcEvent = 0
     self.lightSensor = 0
+    self.prev_x = 0
 
     self.t_follow = T_FOLLOW
     self.comfort_brake = COMFORT_BRAKE
@@ -646,6 +647,11 @@ class LongitudinalMpc:
     v_ego_kph = v_ego * CV.MS_TO_KPH
     model_v = self.vFilter.process(v[-1])
     startSign = (model_v > 5.0 or model_v > (v[0]+2)) # and model_x > 50.0
+
+    ## 시그널이 10M이상 떨리면... 신호가 잘못된걸로...
+    if (self.prev_x - model_x) > 10:
+      startSign = False
+    self.prev_x = model_x
     if v_ego_kph < 1.0: 
       stopSign = model_x < 20.0 and model_v < 10.0
     elif v_ego_kph < 80.0:
