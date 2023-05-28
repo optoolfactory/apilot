@@ -839,7 +839,7 @@ class LongitudinalMpc:
         self.xState = XState.e2eCruise
         if carstate.brakePressed and v_ego_kph < 1.0  and self.softHoldMode > 0:
           self.xState = XState.softHold
-      if self.trafficState == 2: #stop_x > 100.0:
+      if self.trafficState in [0, 2]: #stop_x > 100.0:
         stop_x = 1000.0
 
     if self.trafficStopMode == 2:
