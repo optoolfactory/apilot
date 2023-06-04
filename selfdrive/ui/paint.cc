@@ -840,7 +840,7 @@ void DrawApilot::drawLeadApilot(const UIState* s) {
 #endif
     // 신호등(traffic)그리기.
     // 신호등내부에는 레이더거리, 비젼거리, 정지거리, 신호대기 표시함.
-    int circle_size = 160;
+    //int circle_size = 160;
     NVGcolor bgColor = nvgRGBA(0, 0, 0, 166);
     const auto lp = sm["longitudinalPlan"].getLongitudinalPlan();
     float stop_dist = 0;
@@ -1003,10 +1003,10 @@ void DrawApilot::drawLeadApilot(const UIState* s) {
             showBg = false;
         }
         if (showBg) {
-            nvgBeginPath(s->vg);
-            nvgCircle(s->vg, x, y, circle_size/2.);
-            nvgFillColor(s->vg, bgColor);
-            nvgFill(s->vg);
+            //nvgBeginPath(s->vg);
+            //nvgCircle(s->vg, x, y, circle_size/2.);
+            //nvgFillColor(s->vg, bgColor);
+            //nvgFill(s->vg);
 
         }
 
@@ -1480,7 +1480,7 @@ void DrawApilot::drawDeviceState(UIState* s) {
         ui_draw_text(s, s->fb_w - 20, 35, str, 35, textColor, BOLD);
         float engineRpm = car_state.getEngineRpm();
         float motorRpm = car_state.getMotorRpm();
-        sprintf(str, "FPS: %d, %s: %.0f CHARGE: %.0f%%", g_fps, (motorRpm > 0.0) ? "MOTOR" : "RPM", (motorRpm > 0.0) ? motorRpm : engineRpm, car_state.getChargeMeter());
+        sprintf(str, "FPS: %d, %s: %.0f CHARGE: %.0f%%                      ", g_fps, (motorRpm > 0.0) ? "MOTOR" : "RPM", (motorRpm > 0.0) ? motorRpm : engineRpm, car_state.getChargeMeter());
         ui_draw_text(s, s->fb_w - 20, 90, str, 35, textColor, BOLD);
     }
 
@@ -1493,7 +1493,7 @@ void DrawApilot::drawDebugText(UIState* s) {
 
     nvgTextAlign(s->vg, NVG_ALIGN_RIGHT | NVG_ALIGN_BOTTOM);
 
-    int y = 150, dy = 40;
+    int y = 350, dy = 40;
 
     const int text_x = s->fb_w - 20;
     const auto live_torque_params = sm["liveTorqueParameters"].getLiveTorqueParameters();

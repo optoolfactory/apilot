@@ -252,6 +252,7 @@ class LongitudinalMpc:
     self.applyCruiseGap = 1.
     self.applyModelDistOrder = 32
     self.trafficStopUpdateDist = 10.0
+    self.trafficStopAdjustRatio = 1.0
     self.fakeCruiseDistance = 0.0
     self.stopDist = 0.0
     self.e2eCruiseCount = 0
@@ -596,6 +597,7 @@ class LongitudinalMpc:
     elif self.lo_timer == 160:
       self.applyModelDistOrder = int(Params().get("ApplyModelDistOrder", encoding="utf8"))
       self.trafficStopUpdateDist = int(Params().get("TrafficStopUpdateDist", encoding="utf8"))
+      self.trafficStopAdjustRatio = float(int(Params().get("TrafficStopAdjustRatio", encoding="utf8"))) / 100.
 
   def update_gap_tf(self, controls, radarstate, v_ego, a_ego):
     v_ego_kph = v_ego * CV.MS_TO_KPH
@@ -652,7 +654,7 @@ class LongitudinalMpc:
     if v_ego_kph < 1.0: 
       stopSign = model_x < 20.0 and model_v < 10.0
     elif v_ego_kph < 80.0:
-      stopSign = model_x < 130.0 and ((model_v < 3.0) or (model_v < v[0]*0.7)) and abs(y[-1]) < 20.0
+      stopSign = model_x < 130.0 and ((model_v < 3.0) or (model_v < v[0]*0.7)) and abs(y[-1]) < 5.0
     else:
       stopSign = False
 
@@ -787,7 +789,8 @@ class LongitudinalMpc:
             self.stopDist = 2 if self.xStop < 2 else self.xStop
           else:
             if not self.trafficError and self.trafficState == 1 and self.xStop > self.trafficStopUpdateDist:  # 정지조건에만 update함. 20M이상에서만 Update하자. 이후에는 너무 급격히 정지함. 시험..
-              self.stopDist = self.xStop
+              self.stopDist = self.xStop * interp(self.xStop, [0, 100], [1.0, self.trafficStopAdjustRatio])  ##남은거리에 따라 정지거리 비율조정
+              #self.stopDist = self.xStop * interp(v_ego_kph, [0, 5, 40], [1.0, 1.0, self.trafficStopAdjustRatio])  ##현재속도에 따라 정지거리 비율조정
             elif self.trafficState == 2: ## 감속도중 파란불이면 그냥출발
               #self.trafficError = True
               self.xState = XState.e2eCruisePrepare
@@ -844,7 +847,7 @@ class LongitudinalMpc:
     elif stop_x == 1000.0:
       self.stopDist = 0.0
     elif self.stopDist > 0:
-      stop_dist = v_ego ** 2 / (2.8 * 2) # 2.8m/s^2 으로 감속할경우 필요한 거리.
+      stop_dist = v_ego ** 2 / (3.0 * 2) # 3.0m/s^2 으로 감속할경우 필요한 거리.
       self.stopDist = self.stopDist if self.stopDist > stop_dist else stop_dist
       stop_x = 0.0
 #    else:
