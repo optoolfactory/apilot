@@ -142,7 +142,7 @@ OffroadHome::OffroadHome(QWidget* parent) : QFrame(parent) {
     left_widget->addWidget(new DriveStats);
     left_widget->addWidget(new PrimeAdWidget);
 
-    left_widget->setCurrentIndex(uiState()->primeType() ? 0 : 1);
+    left_widget->setCurrentIndex(uiState()->prime_type ? 0 : 1);
     connect(uiState(), &UIState::primeTypeChanged, [=](int prime_type) {
       left_widget->setCurrentIndex(prime_type ? 0 : 1);
     });

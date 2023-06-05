@@ -678,8 +678,8 @@ void AnnotatedCameraWidget::paintGL() {
 void AnnotatedCameraWidget::paintEvent(QPaintEvent *event) {
   UIState *s = uiState();
   SubMaster &sm = *(s->sm);
-  const double start_draw_t = millis_since_boot();
-  const cereal::ModelDataV2::Reader &model = sm["modelV2"].getModelV2();
+  //const double start_draw_t = millis_since_boot();
+  //const cereal::ModelDataV2::Reader &model = sm["modelV2"].getModelV2();
   const cereal::RadarState::Reader &radar_state = sm["radarState"].getRadarState();
 
   QPainter p(this);
