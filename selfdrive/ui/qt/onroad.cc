@@ -715,7 +715,7 @@ void AnnotatedCameraWidget::paintEvent(QPaintEvent *event) {
 
   // DMoji
   if (s->show_dm_info==1 && !hideDM && (sm.rcv_frame("driverState") > s->scene.started_frame)) {
-    update_dmonitoring(s, sm["driverState"].getDriverState(), dm_fade_state, rightHandDM);
+    update_dmonitoring(s, sm["driverState"].getDriverState(), dm_fade_state);
     drawDriverState(painter, s);
   }
   if(s->show_mode==0) drawHud(painter);
