@@ -516,20 +516,23 @@ void AnnotatedCameraWidget::initializeGL() {
   setBackgroundColor(bg_colors[STATUS_DISENGAGED]);
 }
 
-void AnnotatedCameraWidget::updateFrameMat() {
-  CameraWidget::updateFrameMat();
+void AnnotatedCameraWidget::updateFrameMat(int w, int h) {
+    CameraWidget::updateFrameMat(w, h);
   UIState *s = uiState();
-  int w = width(), h = height();
 
   s->fb_w = w;
   s->fb_h = h;
-
+  auto intrinsic_matrix = s->wide_camera ? ecam_intrinsic_matrix : fcam_intrinsic_matrix;
+  float zoom = ZOOM / intrinsic_matrix.v[0];
+  if (s->wide_camera) {
+    zoom *= 0.5;
+  }
   // Apply transformation such that video pixel coordinates match video
   // 1) Put (0, 0) in the middle of the video
   // 2) Apply same scaling as video
   // 3) Put (0, 0) in top left corner of video
   s->car_space_transform.reset();
-  s->car_space_transform.translate(w / 2 - x_offset, h / 2 - y_offset)
+  s->car_space_transform.translate(w / 2, h / 2 + y_offset)
       .scale(zoom, zoom)
       .translate(-intrinsic_matrix.v[2], -intrinsic_matrix.v[5]);
 }
@@ -711,8 +714,8 @@ void AnnotatedCameraWidget::paintEvent(QPaintEvent *event) {
   }
 
   // DMoji
-  if (s->show_dm_info==1 && !hideDM && (sm.rcv_frame("driverStateV") > s->scene.started_frame)) {
-    update_dmonitoring(s, sm["driverStateV"].getDriverStateV(), dm_fade_state, rightHandDM);
+  if (s->show_dm_info==1 && !hideDM && (sm.rcv_frame("driverState") > s->scene.started_frame)) {
+    update_dmonitoring(s, sm["driverState"].getDriverState(), dm_fade_state, rightHandDM);
     drawDriverState(painter, s);
   }
   if(s->show_mode==0) drawHud(painter);
